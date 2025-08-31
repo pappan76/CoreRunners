@@ -16,3 +16,8 @@ firebase.initializeApp(firebaseConfig);
 // Firestore and Auth instances
 const db = firebase.firestore();
 const auth = firebase.auth();
+
+db.collection("test").get()
+  .then(snap => console.log("Connected to Firestore:", snap))
+  .catch(err => console.error(err));
+
