@@ -1,5 +1,3 @@
-const auth = firebase.auth();
-const db = firebase.firestore();
 
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
