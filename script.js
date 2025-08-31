@@ -11,10 +11,6 @@ const days = ["Sat","Sun","Mon","Tue","Wed","Thu","Fri"];
 let habits = [];
 let weekKey;
 
-db.collection("test").get()
-  .then(snap => console.log("Connected to Firestore:", snap))
-  .catch(err => console.error(err));
-
 // --- Helper to calculate current week (Sat-Fri) ---
 function getWeekStart(date) {
   const day = date.getDay(); // 0=Sun, 6=Sat
