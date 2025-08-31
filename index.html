@@ -5,7 +5,7 @@
   <title>Weekly Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDKs (compat versions for browser) -->
+  <!-- Firebase SDKs (compat versions) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -24,8 +24,23 @@
   </div>
 
   <div id="tracker" style="display:none;">
-    <h2>Your Habits</h2>
-    <ul id="habitList"></ul>
+    <table id="habitTable" border="1">
+      <thead>
+        <tr>
+          <th>Habit</th>
+          <th>Sat</th>
+          <th>Sun</th>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p id="weekTotal">Total completed this week: 0</p>
     <button id="saveBtn">Save Progress</button>
   </div>
 </body>
