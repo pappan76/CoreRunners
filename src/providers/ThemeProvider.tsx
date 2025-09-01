@@ -1,21 +1,24 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/firestore";
+// src/firebase.ts
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // ⚠️ Replace with your Firebase project config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBkhICRh0Cy_Cw-iRWWw8pkUqnuf6896aY",
+  authDomain: "ricorerunners.firebaseapp.com",
+  projectId: "ricorerunners",
+  storageBucket: "ricorerunners.firebasestorage.app",
+  messagingSenderId: "238115407585",
+  appId: "1:238115407585:web:18566d684b0a7e23e919a0",
+  measurementId: "G-RGRDKSERPR"
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const db = firebase.firestore();
-export default firebase;
+// Export Auth and Firestore
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+export default app;
