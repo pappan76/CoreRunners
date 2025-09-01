@@ -204,6 +204,10 @@ logoutBtn.onclick = ()=>{
 
 auth.onAuthStateChanged(async (user)=>{
   try {
+    const userInfoDiv = document.getElementById("userInfo");
+    const userNameSpan = document.getElementById("userName");
+    const userEmailSpan = document.getElementById("userEmail");
+
     if(user){
       await ensureUserProfile(user);
       loginBtn.style.display = "none";
@@ -211,6 +215,21 @@ auth.onAuthStateChanged(async (user)=>{
       trackerDiv.style.display = "block";
       leaderboardTitle.style.display = "block";
       leaderboardTable.style.display = "table";
+      userInfoDiv.style.display = "block";
+
+      // Fetch user profile from Firestore
+      try {
+        const docSnap = await db.collection("users").doc(user.uid).get();
+        if(docSnap.exists){
+          const { firstName, lastName, email } = docSnap.data();
+          userNameSpan.innerText = `${firstName} ${lastName}`;
+          userEmailSpan.innerText = email;
+        }
+      } catch(error){
+        console.error("Error fetching user details:", error);
+        userNameSpan.innerText = "Unknown";
+        userEmailSpan.innerText = user.email;
+      }
 
       await loadWeek(user.uid);
       loadLeaderboard(user.uid);
@@ -220,6 +239,7 @@ auth.onAuthStateChanged(async (user)=>{
       trackerDiv.style.display = "none";
       leaderboardTitle.style.display = "none";
       leaderboardTable.style.display = "none";
+      userInfoDiv.style.display = "none";
     }
   } catch(error){
     console.error("Error handling auth state:", error);
