@@ -1,24 +1,35 @@
-// src/firebase.ts
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
 
-// ⚠️ Replace with your Firebase project config
-const firebaseConfig = {
-  apiKey: "AIzaSyBkhICRh0Cy_Cw-iRWWw8pkUqnuf6896aY",
-  authDomain: "ricorerunners.firebaseapp.com",
-  projectId: "ricorerunners",
-  storageBucket: "ricorerunners.firebasestorage.app",
-  messagingSenderId: "238115407585",
-  appId: "1:238115407585:web:18566d684b0a7e23e919a0",
-  measurementId: "G-RGRDKSERPR"
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+interface ThemeContextType {
+  theme: "light" | "dark";
+  setTheme: (theme: "light" | "dark") => void;
+}
+
+// Create context
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+// Hook to use theme
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) throw new Error("useTheme must be used within ThemeProvider");
+  return context;
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Named export
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
-// Export Auth and Firestore
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+  useEffect(() => {
+    document.documentElement.className = theme;
+  }, [theme]);
 
-export default app;
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
