@@ -5,7 +5,7 @@
   <title>Weekly Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDKs (compat versions) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -43,5 +43,8 @@
     <p id="weekTotal">Total completed this week: 0</p>
     <button id="saveBtn">Save Progress</button>
   </div>
+
+  <h2 class="mt-6">Leaderboard (This Week)</h2>
+  <table id="leaderboard" border="1" cellpadding="5" cellspacing="0"></table>
 </body>
 </html>
