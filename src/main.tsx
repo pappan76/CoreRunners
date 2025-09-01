@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./global.css";
+import App from "/App";
+import "/global.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
 // Import Firebase config (must export a module)
-import "./firebase";
+import "/firebase";
 
 // Render the app
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -13,4 +13,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <App />
   </React.StrictMode>
 );
+
 
