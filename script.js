@@ -7,6 +7,9 @@ const saveBtn = document.getElementById("saveBtn");
 const weekTotalP = document.getElementById("weekTotal");
 const leaderboardTable = document.getElementById("leaderboard");
 const leaderboardTitle = document.getElementById("leaderboardTitle");
+const userInfoDiv = document.getElementById("userInfo");
+const userNameSpan = document.getElementById("userName");
+const userEmailSpan = document.getElementById("userEmail");
 
 // Default habits
 const defaultHabits = ["Exercise","Read","Meditate","Sleep 8h"];
@@ -89,18 +92,33 @@ async function ensureUserProfile(user) {
     const userRef = db.collection("users").doc(user.uid);
     const docSnap = await userRef.get();
 
+    let firstName = "";
+    let lastName = "";
+
     if (!docSnap.exists) {
-      const firstName = prompt("Enter your first name:");
-      const lastName = prompt("Enter your last name:");
+      firstName = prompt("Enter your first name:") || "Unknown";
+      lastName = prompt("Enter your last name:") || "User";
 
       await userRef.set({
         firstName,
         lastName,
         email: user.email
       });
+    } else {
+      const data = docSnap.data();
+      firstName = data.firstName || prompt("Enter your first name:") || "Unknown";
+      lastName = data.lastName || prompt("Enter your last name:") || "User";
+
+      // Update missing fields if necessary
+      if (!data.firstName || !data.lastName) {
+        await userRef.update({ firstName, lastName });
+      }
     }
+
+    return { firstName, lastName };
   } catch(error){
     console.error("Error ensuring user profile:", error);
+    return { firstName: "Unknown", lastName: "User" };
   }
 }
 
@@ -136,7 +154,7 @@ async function saveWeek(uid){
   }
 }
 
-// --- Load leaderboard in real-time with try-catch ---
+// --- Load leaderboard in real-time ---
 function loadLeaderboard(currentUid) {
   try {
     db.collection("users").onSnapshot(async (snapshot) => {
@@ -156,7 +174,7 @@ function loadLeaderboard(currentUid) {
           if (weekSnap.exists) {
             leaderboardData.push({
               uid: userId,
-              name: `${firstName} ${lastName}`,
+              name: `${firstName || "Unknown"} ${lastName || "User"}`,
               total: weekSnap.data().total
             });
           }
@@ -204,12 +222,9 @@ logoutBtn.onclick = ()=>{
 
 auth.onAuthStateChanged(async (user)=>{
   try {
-    const userInfoDiv = document.getElementById("userInfo");
-    const userNameSpan = document.getElementById("userName");
-    const userEmailSpan = document.getElementById("userEmail");
-
     if(user){
-      await ensureUserProfile(user);
+      const profile = await ensureUserProfile(user);
+
       loginBtn.style.display = "none";
       logoutBtn.style.display = "block";
       trackerDiv.style.display = "block";
@@ -217,19 +232,8 @@ auth.onAuthStateChanged(async (user)=>{
       leaderboardTable.style.display = "table";
       userInfoDiv.style.display = "block";
 
-      // Fetch user profile from Firestore
-      try {
-        const docSnap = await db.collection("users").doc(user.uid).get();
-        if(docSnap.exists){
-          const { firstName, lastName, email } = docSnap.data();
-          userNameSpan.innerText = `${firstName} ${lastName}`;
-          userEmailSpan.innerText = email;
-        }
-      } catch(error){
-        console.error("Error fetching user details:", error);
-        userNameSpan.innerText = "Unknown";
-        userEmailSpan.innerText = user.email;
-      }
+      userNameSpan.innerText = `${profile.firstName} ${profile.lastName}`;
+      userEmailSpan.innerText = user.email;
 
       await loadWeek(user.uid);
       loadLeaderboard(user.uid);
