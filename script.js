@@ -92,37 +92,43 @@ async function ensureUserProfile(user) {
     const userRef = db.collection("users").doc(user.uid);
     const docSnap = await userRef.get();
 
-    // Use Google displayName if firstName/lastName not stored
+    // Use Firestore if available, otherwise Google displayName
     let firstName = "";
     let lastName = "";
 
-    if (!docSnap.exists) {
-      const displayName = user.displayName || "Unknown User";
-      [firstName, lastName] = displayName.split(" ");
-      lastName = lastName || ""; // if only one name
+    if (docSnap.exists) {
+      const data = docSnap.data();
+      firstName = data.firstName || "";
+      lastName = data.lastName || "";
+    }
 
+    // If still missing, use Google displayName
+    if (!firstName && !lastName) {
+      if (user.displayName) {
+        const names = user.displayName.split(" ");
+        firstName = names[0];
+        lastName = names.slice(1).join(" "); // handle multi-part last names
+      } else {
+        firstName = "Unknown";
+        lastName = "";
+      }
+    }
+
+    // Store in Firestore if missing
+    if (!docSnap.exists || !docSnap.data().firstName || !docSnap.data().lastName) {
       await userRef.set({
         firstName,
         lastName,
         email: user.email
-      });
-    } else {
-      const data = docSnap.data();
-      firstName = data.firstName || (user.displayName ? user.displayName.split(" ")[0] : "Unknown");
-      lastName = data.lastName || (user.displayName ? user.displayName.split(" ")[1] || "" : "");
-      if (!data.firstName || !data.lastName) {
-        await userRef.update({ firstName, lastName });
-      }
+      }, { merge: true });
     }
 
     return { firstName, lastName };
-  } catch(error){
+  } catch (error) {
     console.error("Error ensuring user profile:", error);
-    return { firstName: "Unknown", lastName: "" };
+    return { firstName: ".", lastName: "" };
   }
 }
-
-
 // --- Load week from Firestore ---
 async function loadWeek(uid){
   try {
