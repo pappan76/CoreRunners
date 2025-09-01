@@ -54,4 +54,8 @@ export default function HabitTable() {
             ))}
           </TableBody>
         </Table>
-        <p className="mt-4 text
+        <p className="mt-4 text-gray-700">
+          {/* example text */}
+          Total habits completed this week: {total}
+        </p>
+
