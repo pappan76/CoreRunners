@@ -9,19 +9,6 @@ interface ThemeContextType {
   setTheme: (theme: "light" | "dark") => void;
 }
 
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
-
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-})
-
 // Create context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -46,4 +33,3 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     </ThemeContext.Provider>
   );
 };
-
