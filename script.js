@@ -92,12 +92,14 @@ async function ensureUserProfile(user) {
     const userRef = db.collection("users").doc(user.uid);
     const docSnap = await userRef.get();
 
+    // Use Google displayName if firstName/lastName not stored
     let firstName = "";
     let lastName = "";
 
     if (!docSnap.exists) {
-      firstName = prompt("Enter your first name:") || "Unknown";
-      lastName = prompt("Enter your last name:") || "User";
+      const displayName = user.displayName || "Unknown User";
+      [firstName, lastName] = displayName.split(" ");
+      lastName = lastName || ""; // if only one name
 
       await userRef.set({
         firstName,
@@ -106,10 +108,8 @@ async function ensureUserProfile(user) {
       });
     } else {
       const data = docSnap.data();
-      firstName = data.firstName || prompt("Enter your first name:") || "Unknown";
-      lastName = data.lastName || prompt("Enter your last name:") || "User";
-
-      // Update missing fields if necessary
+      firstName = data.firstName || (user.displayName ? user.displayName.split(" ")[0] : "Unknown");
+      lastName = data.lastName || (user.displayName ? user.displayName.split(" ")[1] || "" : "");
       if (!data.firstName || !data.lastName) {
         await userRef.update({ firstName, lastName });
       }
@@ -118,9 +118,10 @@ async function ensureUserProfile(user) {
     return { firstName, lastName };
   } catch(error){
     console.error("Error ensuring user profile:", error);
-    return { firstName: "Unknown", lastName: "User" };
+    return { firstName: "Unknown", lastName: "" };
   }
 }
+
 
 // --- Load week from Firestore ---
 async function loadWeek(uid){
