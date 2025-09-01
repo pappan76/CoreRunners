@@ -7,7 +7,7 @@ export default defineConfig({
   base: "/CoreRunners/",
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src")
+      "@": path.resolve(__dirname, "./src")
     }
   }
 });
