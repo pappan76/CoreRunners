@@ -1,26 +1,31 @@
 {
-  "name": "CoreRunners",
+  "name": "corerunners",
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "homepage": "https://<your-username>.github.io/CoreRunners",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "lucide-react": "^0.268.0", 
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tanstack/react-query": "^4.34.0",
+    "firebase": "^10.12.0",
+    "lucide-react": "^0.268.0",
     "next-themes": "^0.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.22.3",
-    "firebase": "^10.12.0",
-    "@tanstack/react-query": "^4.34.0",
     "sonner": "^1.0.0"
   },
   "devDependencies": {
-    "vite": "^5.2.0",
+    "@types/react": "^19.1.12",
     "@vitejs/plugin-react": "^4.2.0",
-    "typescript": "^5.4.5"
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
   }
 }
