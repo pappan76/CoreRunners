@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "homepage": "https://pappan76.github.io/CoreRunners"  "scripts": {
+  "homepage": "https://pappan76.github.io/CoreRunners",
+  "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
